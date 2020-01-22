@@ -33,11 +33,12 @@ public class CatalogController {
         List<Rating> ratings= Arrays.asList(new Rating(1234,2),new Rating(2345,5));
         return ratings.stream().map(rating -> {
            //Movie movie= restTemplate.getForObject("http://localhost:8081/movies/"+rating.getRating(), Movie.class);
-            webClientBuilder.build()
+            Movie movie=webClientBuilder.build()
                             .get()
                             .uri("http://localhost:8081/movies/"+rating.getRating())
                             .retrieve()
-                            .bodyToMono(Movie.class);
+                            .bodyToMono(Movie.class)
+                        .block();
            return new CatalogItem(rating.getRating(),"desc",movie.getName());
         }).collect(Collectors.toList());
 
